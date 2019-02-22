@@ -22,8 +22,110 @@ import (
 	"reflect"
 	"testing"
 
-	. "github.com/Comcast/sheens/util/testutil"
+	. "github.com/jsmorph/sheens/util/testutil"
 )
+
+func TestExtendBindings(t *testing.T) {
+	bs := NewBindings().Extend("likes", "queso")
+	queso, _ := bs["likes"]
+	if queso != "queso" {
+		t.Fatal(queso)
+	}
+}
+
+func TestExtendmBindings(t *testing.T) {
+	t.Run("normal", func(t *testing.T) {
+		bs, err := NewBindings().Extendm("likes", "tacos", "needs", 3)
+		if err != nil {
+			t.Fatal(err)
+		}
+		tacos, _ := bs["likes"]
+		if tacos != "tacos" {
+			t.Fatal(tacos)
+		}
+		needs, _ := bs["needs"]
+		if needs != 3 {
+			t.Fatal(needs)
+		}
+	})
+
+	t.Run("nonStringKey", func(t *testing.T) {
+		bs, err := NewBindings().Extendm("likes", "tacos", true, 3)
+		if err == nil {
+			t.Fatal(bs)
+		}
+	})
+
+	t.Run("oddArgs", func(t *testing.T) {
+		bs, err := NewBindings().Extendm("likes", "tacos", "needs", 3, "nope")
+		if err == nil {
+			t.Fatal(bs)
+		}
+	})
+
+}
+
+func TestRemoveBindings(t *testing.T) {
+	bs, err := NewBindings().Extendm("likes", "tacos", "needs", 3)
+	if err != nil {
+		t.Fatal(err)
+	}
+	bs = bs.Remove("needs")
+	if needs, have := bs["needs"]; have {
+		t.Fatal(needs)
+	}
+}
+
+func TestDeleteExcept(t *testing.T) {
+	bs, err := NewBindings().Extendm("likes", "tacos", "needs", 3, "when", "now")
+	if err != nil {
+		t.Fatal(err)
+	}
+	bs = bs.DeleteExcept("likes")
+	if needs, have := bs["needs"]; have {
+		t.Fatal(needs)
+	}
+	if when, have := bs["when"]; have {
+		t.Fatal(when)
+	}
+	if likes, _ := bs["likes"]; likes != "tacos" {
+		t.Fatal(likes)
+	}
+}
+
+func TestFudge(t *testing.T) {
+	pairs := []struct {
+		X interface{}
+		Y float64
+	}{
+		{
+			X: 1,
+			Y: 1,
+		},
+		{
+			X: int32(1),
+			Y: 1,
+		},
+		{
+			X: int64(1),
+			Y: 1,
+		},
+		{
+			X: float32(1),
+			Y: 1,
+		},
+		{
+			X: float64(1),
+			Y: 1,
+		},
+	}
+	for _, pair := range pairs {
+		y := fudge(pair.X)
+		if y != pair.Y {
+			t.Fatal(pair, y)
+		}
+	}
+}
 
 type MatchTest struct {
 	Pattern       interface{}              `json:"p"`
@@ -193,4 +295,45 @@ func BenchmarkMatch(b *testing.B) {
 			}
 		})
 	}
+}
+
+func TestMatchFunctionBasic(t *testing.T) {
+	bss, err := Match(true, true, NewBindings())
+	check := func() {
+		if err != nil {
+			t.Fatal(err)
+		}
+		if len(bss) != 1 {
+			t.Fatal(bss)
+		}
+		if len(bss[0]) != 0 {
+			t.Fatal(bss[0])
+		}
+	}
+	check()
+
+	m := DefaultMatcher
+	bss, err = m.Matches(true, true)
+	check()
+}
+
+func TestMatchUnknown(t *testing.T) {
+	alien := struct{}{}
+	t.Run("pat", func(t *testing.T) {
+		bss, err := Match(alien, true, NewBindings())
+		if err == nil {
+			t.Fatal(bss)
+		}
+	})
+
+	t.Run("msg", func(t *testing.T) {
+		bss, err := Match(true, alien, NewBindings())
+		if err != nil {
+			t.Fatal(bss)
+		}
+		if len(bss) != 0 {
+			t.Fatal(bss)
+		}
+	})
+
 }

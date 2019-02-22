@@ -362,7 +362,7 @@ func (m *Matcher) getVariable(xs []interface{}) (string, []interface{}, error) {
 // variables to their values.
 //
 // Note that this function returns multiple (sets of) bindings.  This
-// ambiguity is introduced when a pattern contains an array that
+// possibility is introduced when a pattern contains an array that
 // contains a variable.
 func (m *Matcher) Matches(pattern interface{}, fact interface{}) ([]Bindings, error) {
 	return m.Match(pattern, fact, make(Bindings))
@@ -500,7 +500,7 @@ func (m *Matcher) match(pattern interface{}, fact interface{}, bindings Bindings
 		}
 
 	case []interface{}:
-		//separate variable and constants
+		// Separate variable and constants.
 		v, xs, err := m.getVariable(vv)
 		if nil != err {
 			return nil, err
