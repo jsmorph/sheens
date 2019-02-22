@@ -16,8 +16,8 @@ import (
 	"context"
 	"fmt"
 
-	. "github.com/Comcast/sheens/match"
-	. "github.com/Comcast/sheens/util/testutil"
+	. "github.com/jsmorph/sheens/match"
+	. "github.com/jsmorph/sheens/util/testutil"
 )
 
 // Example demonstrates Walk()ing.

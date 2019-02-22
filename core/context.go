@@ -18,7 +18,7 @@ import "time"
 //
 // This type is defined here in order to avoid importing
 // context.Context, which pulls with it a ton of other stuff
-// (e.g. fmt).  See https://github.com/Comcast/sheens/issues/13 and
+// (e.g. fmt).  See https://github.com/jsmorph/sheens/issues/13 and
 // 14.
 type Context interface {
 	Deadline() (deadline time.Time, ok bool)

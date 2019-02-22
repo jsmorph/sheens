@@ -30,8 +30,8 @@ import (
 	"runtime/pprof"
 	"strings"
 
-	"github.com/Comcast/sheens/tools"
-	. "github.com/Comcast/sheens/util/testutil"
+	"github.com/jsmorph/sheens/tools"
+	. "github.com/jsmorph/sheens/util/testutil"
 )
 
 func main() {

@@ -25,7 +25,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/Comcast/sheens/match"
+	"github.com/jsmorph/sheens/match"
 )
 
 func main() {

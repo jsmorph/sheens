@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/Comcast/sheens/util/testutil"
+	. "github.com/jsmorph/sheens/util/testutil"
 )
 
 func TestTimersGlue(t *testing.T) {

@@ -15,9 +15,9 @@
 package interpreters
 
 import (
-	"github.com/Comcast/sheens/core"
-	"github.com/Comcast/sheens/interpreters/ecmascript"
-	"github.com/Comcast/sheens/interpreters/noop"
+	"github.com/jsmorph/sheens/core"
+	"github.com/jsmorph/sheens/interpreters/ecmascript"
+	"github.com/jsmorph/sheens/interpreters/noop"
 )
 
 // Standard returns a map of interpreters that includes ECMAScript,

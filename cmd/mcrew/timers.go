@@ -23,7 +23,7 @@ import (
 	"sync"
 	"time"
 
-	. "github.com/Comcast/sheens/util/testutil"
+	. "github.com/jsmorph/sheens/util/testutil"
 )
 
 type Emitter func(ctx context.Context, message interface{}) error
@@ -119,7 +119,7 @@ func (ts *Timers) Add(ctx context.Context, id string, message interface{}, in ti
 				ts.err(fmt.Errorf("Timers emit error %v id=%s", err, id))
 			}
 
-			// See https://github.com/Comcast/sheens/issues/19
+			// See https://github.com/jsmorph/sheens/issues/19
 			ts.Lock()
 			delete(ts.timers, id)
 			ts.Unlock()

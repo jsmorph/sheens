@@ -15,7 +15,7 @@ package tools
 import (
 	"fmt"
 
-	"github.com/Comcast/sheens/core"
+	"github.com/jsmorph/sheens/core"
 )
 
 type SpecAnalysis struct {

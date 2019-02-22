@@ -16,7 +16,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Comcast/sheens/core"
+	"github.com/jsmorph/sheens/core"
 )
 
 func TestAnalysis(t *testing.T) {

@@ -21,7 +21,7 @@ import (
 	"os"
 	"regexp"
 
-	. "github.com/Comcast/sheens/util/testutil"
+	. "github.com/jsmorph/sheens/util/testutil"
 
 	"github.com/gorilla/websocket"
 )

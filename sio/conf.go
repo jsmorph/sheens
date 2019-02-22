@@ -13,7 +13,7 @@
 package sio
 
 import (
-	"github.com/Comcast/sheens/core"
+	"github.com/jsmorph/sheens/core"
 )
 
 // CrewConf contains (or will contain) basic crew configuration data.

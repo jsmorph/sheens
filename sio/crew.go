@@ -22,10 +22,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/Comcast/sheens/core"
-	"github.com/Comcast/sheens/crew"
-	"github.com/Comcast/sheens/interpreters/ecmascript"
-	"github.com/Comcast/sheens/match"
+	"github.com/jsmorph/sheens/core"
+	"github.com/jsmorph/sheens/crew"
+	"github.com/jsmorph/sheens/interpreters/ecmascript"
+	"github.com/jsmorph/sheens/match"
 
 	yaml "gopkg.in/yaml.v2"
 )

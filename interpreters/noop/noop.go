@@ -18,8 +18,8 @@ import (
 	"context"
 	"log"
 
-	"github.com/Comcast/sheens/core"
-	. "github.com/Comcast/sheens/match"
+	"github.com/jsmorph/sheens/core"
+	. "github.com/jsmorph/sheens/match"
 )
 
 // Interpreter is an core.Interpreter which just returns the bindings

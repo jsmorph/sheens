@@ -25,10 +25,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Comcast/sheens/core"
-	ints "github.com/Comcast/sheens/interpreters"
-	"github.com/Comcast/sheens/match"
-	"github.com/Comcast/sheens/tools"
+	"github.com/jsmorph/sheens/core"
+	ints "github.com/jsmorph/sheens/interpreters"
+	"github.com/jsmorph/sheens/match"
+	"github.com/jsmorph/sheens/tools"
 
 	"github.com/jsccast/yaml"
 )

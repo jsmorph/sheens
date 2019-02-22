@@ -25,12 +25,12 @@ type Crew struct {
 	// Id is an optional name for this crew.
 	Id string `json:"id"`
 
-	// Machines is the collection of Machines indexed by their
-	// ids.
+	// Machines is the collection of Machines indexed by id.
 	Machines map[string]*Machine `json:"machines"`
 }
 
-// Copy gets a read lock and returns a deep copy of the crew.
+// Copy gets (and later releases) a read lock and returns a deep copy
+// of the crew.
 //
 // Each Machine is itself Copy()ed, too.
 func (c *Crew) Copy() *Crew {

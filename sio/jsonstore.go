@@ -18,7 +18,7 @@ import (
 	"io/ioutil"
 	"sync"
 
-	"github.com/Comcast/sheens/crew"
+	"github.com/jsmorph/sheens/crew"
 )
 
 // JSONStore is a primitive facility to store crew state as JSON in a

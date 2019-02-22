@@ -19,10 +19,10 @@ import (
 	"log"
 	"time"
 
-	"github.com/Comcast/sheens/core"
-	"github.com/Comcast/sheens/crew"
-	"github.com/Comcast/sheens/match"
-	. "github.com/Comcast/sheens/util/testutil"
+	"github.com/jsmorph/sheens/core"
+	"github.com/jsmorph/sheens/crew"
+	"github.com/jsmorph/sheens/match"
+	. "github.com/jsmorph/sheens/util/testutil"
 
 	"github.com/boltdb/bolt"
 )

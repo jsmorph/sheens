@@ -19,9 +19,9 @@ import (
 	"io"
 	"io/ioutil"
 
-	"github.com/Comcast/sheens/core"
-	"github.com/Comcast/sheens/interpreters/noop"
-	. "github.com/Comcast/sheens/util/testutil"
+	"github.com/jsmorph/sheens/core"
+	"github.com/jsmorph/sheens/interpreters/noop"
+	. "github.com/jsmorph/sheens/util/testutil"
 	"github.com/jsccast/yaml"
 
 	md "gopkg.in/russross/blackfriday.v2"

@@ -17,8 +17,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/Comcast/sheens/crew"
-	"github.com/Comcast/sheens/match"
+	"github.com/jsmorph/sheens/crew"
+	"github.com/jsmorph/sheens/match"
 )
 
 // GetTimers gets the Timers for the crew.

@@ -18,8 +18,8 @@ import (
 	"io"
 	"log"
 
-	"github.com/Comcast/sheens/core"
-	. "github.com/Comcast/sheens/util/testutil"
+	"github.com/jsmorph/sheens/core"
+	. "github.com/jsmorph/sheens/util/testutil"
 )
 
 var Verbose = true

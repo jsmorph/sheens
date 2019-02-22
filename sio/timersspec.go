@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Comcast/sheens/core"
-	"github.com/Comcast/sheens/match"
+	"github.com/jsmorph/sheens/core"
+	"github.com/jsmorph/sheens/match"
 )
 
 // TimerMsg is a command that the timers machine can execute.

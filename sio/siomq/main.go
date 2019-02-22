@@ -29,9 +29,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Comcast/sheens/core"
-	"github.com/Comcast/sheens/crew"
-	"github.com/Comcast/sheens/sio"
+	"github.com/jsmorph/sheens/core"
+	"github.com/jsmorph/sheens/crew"
+	"github.com/jsmorph/sheens/sio"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )

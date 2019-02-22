@@ -17,8 +17,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/Comcast/sheens/match"
-	. "github.com/Comcast/sheens/util/testutil"
+	"github.com/jsmorph/sheens/match"
+	. "github.com/jsmorph/sheens/util/testutil"
 )
 
 func (s *Service) toHTTP(ctx context.Context, msg interface{}) error {

@@ -23,8 +23,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/Comcast/sheens/core"
-	"github.com/Comcast/sheens/match"
+	"github.com/jsmorph/sheens/core"
+	"github.com/jsmorph/sheens/match"
 
 	"github.com/dop251/goja"
 	"github.com/gorhill/cronexpr"

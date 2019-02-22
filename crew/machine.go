@@ -15,7 +15,7 @@ package crew
 import (
 	"context"
 
-	"github.com/Comcast/sheens/core"
+	"github.com/jsmorph/sheens/core"
 )
 
 // <machines,message> → <walks> → <machines,messages>

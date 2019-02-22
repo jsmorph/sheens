@@ -38,7 +38,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Comcast/sheens/sio"
+	"github.com/jsmorph/sheens/sio"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )

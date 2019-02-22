@@ -17,7 +17,7 @@ import (
 	"errors"
 	"strings"
 
-	. "github.com/Comcast/sheens/match"
+	. "github.com/jsmorph/sheens/match"
 )
 
 var (

@@ -22,8 +22,8 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/Comcast/sheens/core"
-	"github.com/Comcast/sheens/tools"
+	"github.com/jsmorph/sheens/core"
+	"github.com/jsmorph/sheens/tools"
 
 	"github.com/jsccast/yaml"
 )

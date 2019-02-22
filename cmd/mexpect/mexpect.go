@@ -19,8 +19,8 @@ import (
 	"io/ioutil"
 	"time"
 
-	"github.com/Comcast/sheens/interpreters"
-	"github.com/Comcast/sheens/tools/expect"
+	"github.com/jsmorph/sheens/interpreters"
+	"github.com/jsmorph/sheens/tools/expect"
 
 	"github.com/jsccast/yaml"
 )

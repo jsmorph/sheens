@@ -21,7 +21,7 @@ import (
 	"log"
 	"strings"
 
-	. "github.com/Comcast/sheens/core"
+	. "github.com/jsmorph/sheens/core"
 )
 
 type MermaidOpts struct {

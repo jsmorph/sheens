@@ -24,7 +24,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Comcast/sheens/core"
+	"github.com/jsmorph/sheens/core"
 
 	"github.com/jsccast/yaml"
 )

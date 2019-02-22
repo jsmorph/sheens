@@ -16,7 +16,7 @@ import (
 	"context"
 	"testing"
 
-	. "github.com/Comcast/sheens/match"
+	. "github.com/jsmorph/sheens/match"
 )
 
 func TestPermanentBindings(t *testing.T) {

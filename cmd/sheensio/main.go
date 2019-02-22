@@ -26,9 +26,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Comcast/sheens/core"
-	"github.com/Comcast/sheens/interpreters"
-	"github.com/Comcast/sheens/match"
+	"github.com/jsmorph/sheens/core"
+	"github.com/jsmorph/sheens/interpreters"
+	"github.com/jsmorph/sheens/match"
 )
 
 type Machine struct {

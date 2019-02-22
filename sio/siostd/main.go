@@ -19,8 +19,8 @@ import (
 	"flag"
 	"time"
 
-	"github.com/Comcast/sheens/core"
-	"github.com/Comcast/sheens/sio"
+	"github.com/jsmorph/sheens/core"
+	"github.com/jsmorph/sheens/sio"
 )
 
 func main() {

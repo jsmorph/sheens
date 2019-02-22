@@ -24,7 +24,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Comcast/sheens/crew"
+	"github.com/jsmorph/sheens/crew"
 )
 
 // Stdio is a fairly simple Couplings that uses stdin for input and

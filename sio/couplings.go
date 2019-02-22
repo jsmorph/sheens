@@ -15,7 +15,7 @@ package sio
 import (
 	"context"
 
-	"github.com/Comcast/sheens/crew"
+	"github.com/jsmorph/sheens/crew"
 )
 
 // Couplings provide channels for message input, results output, and

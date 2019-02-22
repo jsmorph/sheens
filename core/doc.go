@@ -43,5 +43,5 @@
 // also want to Analyze() it.  Then, given an initial State an a
 // sequence of messages, you can Walk() to the next State.
 //
-// See https://github.com/Comcast/sheens for an overview.
+// See https://github.com/jsmorph/sheens for an overview.
 package core
