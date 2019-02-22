@@ -3,9 +3,9 @@
 
 # Sheens: Messaging machines
 
-<a href="doc/homeassistant.svg"><img src="https://raw.githubusercontent.com/jsmorph/sheens/master/doc/homeassistant.svg?sanitize=true" width="400"></a>
-
 A fork of [`github.com/Comcast/sheens`](https://github.com/Comcast/sheens).
+
+<a href="doc/homeassistant.svg"><img src="https://raw.githubusercontent.com/jsmorph/sheens/master/doc/homeassistant.svg?sanitize=true" width="400"></a>
 
 ## Introduction
 
