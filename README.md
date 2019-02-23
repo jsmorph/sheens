@@ -58,6 +58,12 @@ Other objectives:
 
 ## Getting started
 
+### Using a release
+
+Download and unpack a [release](https://github.com/jsmorph/sheens/releases).
+
+### Building
+
 To build the Go implementation, first install
 [Go](https://golang.org/doc/install).
 
@@ -67,11 +73,12 @@ Then:
 go get github.com/jsmorph/sheens/...
 ```
 
-Change to the root of the repo, and you can run a demo machine that
-doubles numbers:
+### Running
+
+Change to the root of the repo or the `sheens-VERSION` subdirectory of
+the release.  Then try this example:
 
 ```Shell
-cd $GOPATH/src/github.com/jsmorph/sheens # Or equivalent
 echo '{"double":1}' | msimple -s specs/double.yaml 
 ```
 
