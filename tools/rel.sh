@@ -31,6 +31,9 @@ if [ "$GOOS" = "linux" -a "$GOARCH" = "amd64" ]; then
     (cd $TARGET && /usr/bin/upx *)
 fi
 
+mkdir $TARGET/js
+cp js/*.js $TARGET/js
+
 cp -R specs $TARGET/
 cp LICENSE $TARGET/LICENSE.txt
 

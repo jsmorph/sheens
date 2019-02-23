@@ -29,7 +29,7 @@ post-install-test:
 	set -e; for TEST in $$(ls specs/tests/*.yaml); do echo "Running $$TEST"; mexpect -f $$TEST > tmp/$$(basename $$TEST.log) 2>&1 || (echo $$TEST failed; exit 1); done
 
 releases:
-	./rel.sh linux
-	./rel.sh darwin
-	./rel.sh windows
+	./tools/rel.sh linux
+	./tools/rel.sh darwin
+	./tools/rel.sh windows
 	GOARM=5 ./rel.sh linux arm

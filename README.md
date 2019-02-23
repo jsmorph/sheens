@@ -18,9 +18,9 @@ efficient and atomic.  The initial motivation for Sheens was for
 IoT-oriented home automations; however, Sheens has been useful in many
 other settings.
 
-For the Go implementation, the core package is fewer than 2,000 lines
-of source code.  The Javascript implementation core is fewer than 800
-lines of code.
+For the Go implementation, the core packages contain fewer than 2,600
+lines of source code.  The Javascript [implementation](js) is fewer
+than 1000 lines of code.
 
 Sheens is easy to integrate via HTTP, WebSockets, MQTT, plain TCP, Go
 or C applications, or via other glue.  We have integrated Sheens with
@@ -30,7 +30,8 @@ Assistant](https://home-assistant.io/), and other systems.
 The Sheens engine is highly programmable, and Sheens-oriented tools
 (debuggers, visualizations, monitoring, analyzers) are often easy to
 implement.  The structure and behavior of Sheens are amenable to
-[standardization](doc/rfc.md).
+[standardization](doc/rfc.md) and formal
+[verification](doc/patmatch.v).
 
 ## License
 
@@ -460,7 +461,8 @@ could provide durable timers.  Etc.
 
 ## Formal methods
 
-Though you can happily use sheens without worrying about formalities, you can get formal with sheens if you want to.
+Though you can happily use sheens without worrying about formalities,
+you can get formal with Sheens if you want to.
 
 ### System verification
 
