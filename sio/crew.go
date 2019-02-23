@@ -83,23 +83,42 @@ type Result struct {
 // support message processing, with I/O coupled via two channels (in
 // and out).
 type Crew struct {
+	// Machines represents this's Crews current machines.
 	Machines map[string]*crew.Machine
-	Conf     *CrewConf `json:"conf"`
+
+	// Conf provides some basic Crew parameters.
+	Conf *CrewConf `json:"conf"`
 
 	// Verbose turns on logging.
 	Verbose bool
 
-	changed  map[string]*Changed
-	previous map[string]string
-	timers   *Timers
+	// changed is a cache of machine state changes that are
+	// accumulated during message processing.
+	changed map[string]*Changed
 
-	in  chan interface{}
+	// previous is a cache of machine states prior to processing a
+	// message.  Used to compute net changes.
+	previous map[string]string
+
+	// timers holds the local, internal, native Timers system.
+	timers *Timers
+
+	// in receives all in-bound messages.
+	in chan interface{}
+
+	// out receives all out-bound messages.
 	out chan *Result
 
 	// Mutex can probably be removed once code is cleaned up to
 	// perform all state changes, including timers state changes,
 	// the Crew loop.  ToDo.
 	sync.Mutex
+
+	// UpdateHook is called for atomic machine states updates.
+	//
+	// This function is called after messages are emitted. ToDo:
+	// The other way?
+	UpdateHook func(map[string]*Changed) error
 }
 
 // NewCrew makes a crew with the given configuration and couplings.
@@ -131,6 +150,11 @@ func (c *Crew) init(ctx context.Context) error {
 	}
 	c.timers = NewTimers(f)
 	c.timers.c = c
+
+	// c.UpdateHook = func(m map[string]*Changed) error {
+	// 	log.Printf("changes: %s", JS(m))
+	// 	return nil
+	// }
 
 	if err := c.SetMachine(ctx, CaptainMachine, nil, nil); err != nil {
 		return err
@@ -296,6 +320,12 @@ func (c *Crew) ProcessMsg(ctx context.Context, msg interface{}) (*Result, error)
 	changed, err := c.GetChanged(ctx)
 	if err != nil {
 		return nil, err
+	}
+
+	if c.UpdateHook != nil {
+		if err := c.UpdateHook(changed); err != nil {
+			return nil, err
+		}
 	}
 
 	r.Changed = changed
