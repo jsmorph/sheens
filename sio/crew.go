@@ -113,12 +113,6 @@ type Crew struct {
 	// perform all state changes, including timers state changes,
 	// the Crew loop.  ToDo.
 	sync.Mutex
-
-	// UpdateHook is called for atomic machine states updates.
-	//
-	// This function is called after messages are emitted. ToDo:
-	// The other way?
-	UpdateHook func(map[string]*Changed) error
 }
 
 // NewCrew makes a crew with the given configuration and couplings.
@@ -320,12 +314,6 @@ func (c *Crew) ProcessMsg(ctx context.Context, msg interface{}) (*Result, error)
 	changed, err := c.GetChanged(ctx)
 	if err != nil {
 		return nil, err
-	}
-
-	if c.UpdateHook != nil {
-		if err := c.UpdateHook(changed); err != nil {
-			return nil, err
-		}
 	}
 
 	r.Changed = changed
