@@ -1,14 +1,7 @@
 # Crew on stdin/stdout
 
-Command-line arguments follow `mosquitto_sub`'s.  Run `siostd -h` for
-details.
+Doesn't (yet) provide any persistence.
 
-For an example session, see `run.sh`, which expects an insecure MQTT
-broker on 1883.  (See the _insecure_
-[`mosquitto.conf`](mosquitto.conf) to use with `mosquitto -c
-mosquitto.conf`.)
-
-Example:
 
 ```
 ./run.sh

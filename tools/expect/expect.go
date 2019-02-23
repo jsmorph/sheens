@@ -132,7 +132,7 @@ type Session struct {
 	Verbose bool `json:"verbose,omitempty" yaml:"verbose,omitempty"`
 }
 
-// Run processes all the IOs in the Sesson.
+// Run processes all the IOs in the Session.
 //
 // The current directory is changed to 'dir' (and then hopefully
 // restored).
