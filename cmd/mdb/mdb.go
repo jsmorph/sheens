@@ -10,6 +10,8 @@
  * limitations under the License.
  */
 
+/* This file might have changed after the fork. */
+
 // Package main is a command-line machine debugger in the spirit of gdb.
 package main
 

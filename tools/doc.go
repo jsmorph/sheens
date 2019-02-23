@@ -10,5 +10,7 @@
  * limitations under the License.
  */
 
+/* This file might have changed after the fork. */
+
 // Package tools includes miscellaneous tooling.
 package tools

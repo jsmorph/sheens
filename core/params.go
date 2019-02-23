@@ -10,6 +10,8 @@
  * limitations under the License.
  */
 
+/* This file might have changed after the fork. */
+
 package core
 
 // ParamSpec is a strawman struct to represent data about required and

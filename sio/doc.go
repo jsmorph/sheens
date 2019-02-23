@@ -10,5 +10,7 @@
  * limitations under the License.
  */
 
+/* This file might have changed after the fork. */
+
 // Package sio provides a single-crew system with pluggable IO.
 package sio

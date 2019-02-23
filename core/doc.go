@@ -10,6 +10,8 @@
  * limitations under the License.
  */
 
+/* This file might have changed after the fork. */
+
 // Package core provides the core gear for specification-driven
 // message processing.  These specifications are structured as state
 // transitions rules based on pattern matching against either a

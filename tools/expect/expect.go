@@ -10,6 +10,8 @@
  * limitations under the License.
  */
 
+/* This file might have changed after the fork. */
+
 // Package expect is a tool for testing machine specifications.
 //
 // You construct a Session, which has inputs and expected outputs.

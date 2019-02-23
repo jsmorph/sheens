@@ -10,6 +10,8 @@
  * limitations under the License.
  */
 
+/* This file might have changed after the fork. */
+
 // Package crew is a simple, example foundation for gathering a set of
 // machines.
 package crew

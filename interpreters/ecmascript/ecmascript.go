@@ -10,6 +10,8 @@
  * limitations under the License.
  */
 
+/* This file might have changed after the fork. */
+
 // Package ecmascript provides an ECMAScript-compatible action
 // interpreter.
 package ecmascript

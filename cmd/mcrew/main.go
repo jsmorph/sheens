@@ -10,6 +10,8 @@
  * limitations under the License.
  */
 
+/* This file might have changed after the fork. */
+
 // Package main is an example command-line program for running a
 // "crew" of machines.
 package main

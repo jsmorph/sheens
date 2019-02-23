@@ -10,6 +10,8 @@
  * limitations under the License.
  */
 
+/* This file might have changed after the fork. */
+
 // Package noop provides a no-op interpreter that can be handy for
 // some tests.
 package noop

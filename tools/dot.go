@@ -10,6 +10,8 @@
  * limitations under the License.
  */
 
+/* This file might have changed after the fork. */
+
 package tools
 
 // dot -Tpng g.dot > g.png

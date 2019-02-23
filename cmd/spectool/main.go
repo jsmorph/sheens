@@ -10,6 +10,8 @@
  * limitations under the License.
  */
 
+/* This file might have changed after the fork. */
+
 // Package main is a program that can modify and analyze machine
 // specifications.
 package main

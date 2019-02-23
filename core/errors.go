@@ -10,6 +10,8 @@
  * limitations under the License.
  */
 
+/* This file might have changed after the fork. */
+
 package core
 
 // These errors are user errors, not internal errors.

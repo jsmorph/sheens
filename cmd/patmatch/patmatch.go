@@ -10,6 +10,8 @@
  * limitations under the License.
  */
 
+/* This file might have changed after the fork. */
+
 // Package main is a little command-line utility to invoke pattern matching.
 //
 //   patmatch -p '{"likes":"?liked"}' -m '{"likes":["tacos","chips"]}' -w '[{"?liked":["tacos","chipss"]}]'
