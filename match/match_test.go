@@ -324,6 +324,11 @@ func TestMatchUnknown(t *testing.T) {
 		if err == nil {
 			t.Fatal(bss)
 		}
+		if upt, is := err.(*UnknownPatternType); !is {
+			t.Fatal(err)
+		} else {
+			upt.Error() // Coverage!
+		}
 	})
 
 	t.Run("msg", func(t *testing.T) {

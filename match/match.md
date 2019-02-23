@@ -916,29 +916,3 @@ should return
 [{}]
 
 ```
-
-## 64. Need a map to match a map
-
-The pattern
-```JSON
-false
-
-```
-
-matched against
-```JSON
-{"likes":"queso"}
-
-```
-
-with bindings
-```JSON
-{}
-
-```
-
-should return
-```JSON
-[]
-
-```
