@@ -2,7 +2,7 @@
 
 Doesn't provide any persistence.
 
-Also see [`mqclient`](../mqclient).
+Also see the MQTT command-line client [`mqclient`](../mqclient).
 
 ## Usage
 
@@ -11,7 +11,7 @@ details.
 
 For an example session, see `run.sh`, which expects an insecure MQTT
 broker on 1883.  (See the _insecure_
-[`../siost/mosquitto.conf`](mosquitto.conf) to use with `mosquitto -c
+[`../siostd/mosquitto.conf`](mosquitto.conf) to use with `mosquitto -c
 mosquitto.conf`.)
 
 
