@@ -5,6 +5,9 @@ This demo process is serves a single "crew" of machines.
 See [`protocol.go`](protocol.go) for the protocol, and see
 [`input.txt`](input.txt) for a simple example.
 
+Also see [`../../sio`](../../sio), which runs a crew in its own
+process.
+
 
 ## Usage
 
