@@ -24,15 +24,22 @@ import (
 // persistence.
 //
 // For example, an implementation could couple a crew to an MQTT
-// broker (for IO) and SQLite (for persistence).
+// broker (for IO).  For persistence, an implementation could use
+// https://github.com/etcd-io/bbolt, DynamoDB, SQLite, etc.
 type Couplings interface {
 	// Start initializes the Couplings.
 	Start(context.Context) error
 
 	// IO returns the input and result channels.
+	//
+	// Consumer can see all emitted messages and state updates via
+	// the Result(s).
 	IO(context.Context) (chan interface{}, chan *Result, error)
 
 	// Read (optionally) returns an initial set of machines.
+	//
+	// An implementation that supports persistence would read
+	// machine state and pass it to this method.
 	Read(context.Context) (map[string]*crew.Machine, error)
 
 	// Stop shuts down the Couplings.

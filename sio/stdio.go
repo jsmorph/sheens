@@ -32,7 +32,7 @@ import (
 // Stdio is a fairly simple Couplings that uses stdin for input and
 // stdout for output.
 //
-// State is optionally written as JSON to a file.
+// State is optionally crudely written as JSON to a file.
 type Stdio struct {
 	// In is coupled to crew input.
 	In io.Reader
@@ -58,7 +58,7 @@ type Stdio struct {
 
 	JSONStore
 
-	// WriteStatePerMsg will write out all state after every input
+	// WriteStatePerMsg will write out ALL state after every input
 	// message is processed.
 	//
 	// Inefficient!
