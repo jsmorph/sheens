@@ -17,7 +17,7 @@ set -e
 
 go install
 
-cat<<EOF | siostd -sh -ts -echo -pad -wait 7s -state-out state.json 
+cat<<EOF | siostd -sh -ts -echo -pad -wait 7s -state-out state.json
 {"to":"captain","update":{"c":{"spec":{"inline":<<cat ../../specs/collatz.yaml | yaml2json>>}}}}
 {"to":"captain","update":{"dc":{"spec":{"inline":<<cat ../../specs/doublecount.yaml | yaml2json>>}}}}
 {"to":"captain","update":{"d":{"spec":{"inline":<<cat ../../specs/double.yaml | yaml2json>>}}}}

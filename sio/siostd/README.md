@@ -1,6 +1,6 @@
 # Crew on stdin/stdout
 
-Doesn't (yet) provide any persistence.
+Provides optional, very crude persistence via a JSON file.
 
 
 ```

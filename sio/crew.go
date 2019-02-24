@@ -77,6 +77,18 @@ type Result struct {
 	// batches are NOT orders (because the order that machines are
 	// presented with an in-bound message is not specified).
 	Emitted [][]interface{}
+
+	// Diag includes internal processing data.
+	Diag []*Stroll
+}
+
+// Stroll is a internal processing data for the given message.
+//
+// Result.Diag gathers this information.
+type Stroll struct {
+	Msg     interface{} `json:"msg"`
+	Walkeds interface{} `json:"walks"`
+	Err     string      `json:"err,omitempty"`
 }
 
 // Crew represents a collection of machines and associated gear to
@@ -276,6 +288,7 @@ func (c *Crew) ProcessMsg(ctx context.Context, msg interface{}) (*Result, error)
 
 	r := &Result{
 		Emitted: make([][]interface{}, 0, 8),
+		Diag:    make([]*Stroll, 0, 8),
 	}
 
 	for 0 < len(pending) {
@@ -289,8 +302,15 @@ func (c *Crew) ProcessMsg(ctx context.Context, msg interface{}) (*Result, error)
 		}
 
 		walkeds, err := c.RunMachines(ctx, msg)
+		stroll := &Stroll{
+			Msg:     msg,
+			Walkeds: walkeds,
+		}
+		r.Diag = append(r.Diag, stroll)
+
 		if err != nil {
-			return nil, err
+			stroll.Err = err.Error()
+			return r, err
 		}
 
 		for _, walked := range walkeds {
@@ -549,10 +569,11 @@ func ResolveSpecSource(ctx context.Context, specSource interface{}) (*crew.SpecS
 		return &src, src.Inline, nil
 	}
 
+	var body []byte
+
 	if src.URL != "" {
 		// Yikes.  We hate doing blocking IO. ToDo: Something better?
 
-		var body []byte
 		if strings.HasPrefix(src.URL, "file://") {
 			filename := src.URL[7:]
 			log.Println("ResolveSpecSource: reading file", filename)
@@ -565,23 +586,31 @@ func ResolveSpecSource(ctx context.Context, specSource interface{}) (*crew.SpecS
 			body, err = ioutil.ReadAll(resp.Body)
 			resp.Body.Close()
 		}
-
-		var spec core.Spec
-		if body[0] == '{' {
-			err = json.Unmarshal(body, &spec)
-		} else {
-			err = yaml.Unmarshal(body, &spec)
-		}
-		if err != nil {
-			return nil, nil, err
-		}
-		if err = spec.Compile(ctx, Interpreters, true); err != nil {
-			return nil, nil, err
-		}
-		return &src, &spec, nil
 	}
 
-	return nil, nil, nil
+	if src.Source != "" {
+		body = []byte(src.Source)
+	}
+
+	if len(body) == 0 {
+		return nil, nil, fmt.Errorf("spec source is empty")
+	}
+
+	var spec core.Spec
+	switch body[0] {
+	case '{':
+		err = json.Unmarshal(body, &spec)
+	default:
+		err = yaml.Unmarshal(body, &spec)
+	}
+	if err != nil {
+		return nil, nil, err
+	}
+	if err = spec.Compile(ctx, Interpreters, true); err != nil {
+		return nil, nil, err
+	}
+
+	return &src, &spec, nil
 }
 
 // DefaultState returns a state at "state" with empty bindings.

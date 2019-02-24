@@ -66,6 +66,9 @@ type Stdio struct {
 
 	// InputEOF will be closed on EOF from stdin.
 	InputEOF chan bool
+
+	// PrintDiag turns on printing of diagnostic data.
+	PrintDiag bool
 }
 
 // NewStdio creates a new Stdio.
@@ -194,6 +197,13 @@ func (s *Stdio) IO(ctx context.Context) (chan interface{}, chan *Result, error) 
 				for i, emitted := range r.Emitted {
 					for j, msg := range emitted {
 						printf("emit", "%d,%d %s\n", i, j, JS(msg))
+					}
+				}
+				if s.PrintDiag {
+					if r.Diag != nil {
+						for i, stroll := range r.Diag {
+							printf("diag", "%d,%s\n", i, JShort(stroll))
+						}
 					}
 				}
 				for mid, m := range r.Changed {

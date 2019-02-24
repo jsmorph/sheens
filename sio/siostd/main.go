@@ -18,10 +18,14 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
+	"io/ioutil"
+	"log"
 	"time"
 
 	"github.com/jsmorph/sheens/core"
+	"github.com/jsmorph/sheens/crew"
 	"github.com/jsmorph/sheens/sio"
 )
 
@@ -34,13 +38,42 @@ func main() {
 	flag.BoolVar(&io.PadTags, "pad", false, "pad tags")
 	flag.StringVar(&io.StateOutputFilename, "state-out", "", "state output filename")
 	flag.BoolVar(&io.WriteStatePerMsg, "write-state-msg", false, "write state after each msg")
+	flag.BoolVar(&io.PrintDiag, "diag", false, "print diagnostic data")
 
-	wait := flag.Duration("wait", 0, "wait this long before shutting down couplings")
+	var (
+		specFile = flag.String("spec-file", "", "optional spec filename")
+		mid      = flag.String("mid", "m", "Machine id for -spec-file (if given)")
+		stateJS  = flag.String("state", "{}", "State for -spec-file (if given)")
+		wait     = flag.Duration("wait", 0, "wait this long before shutting down couplings")
+
+		specSource *crew.SpecSource
+		state      *core.State
+	)
 
 	flag.Parse()
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
+	if *specFile != "" {
+		bs, err := ioutil.ReadFile(*specFile)
+		if err != nil {
+			panic(err)
+		}
+		specSource = &crew.SpecSource{
+			Source: string(bs),
+		}
+
+		if specSource, _, err = sio.ResolveSpecSource(ctx, specSource); err != nil {
+			panic(err)
+		}
+	}
+
+	if *stateJS != "" {
+		if err := json.Unmarshal([]byte(*stateJS), &state); err != nil {
+			panic(err)
+		}
+	}
 
 	conf := &sio.CrewConf{
 		Ctl: core.DefaultControl,
@@ -59,6 +92,15 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	if specSource != nil {
+		log.Printf("SetMachine %s", *mid)
+
+		if err := c.SetMachine(ctx, *mid, specSource, state); err != nil {
+			panic(err)
+		}
+	}
+
 	for mid, m := range ms {
 		if err := c.SetMachine(ctx, mid, m.SpecSource, m.State); err != nil {
 			panic(err)
