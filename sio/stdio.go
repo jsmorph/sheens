@@ -52,20 +52,27 @@ type Stdio struct {
 	// the output.
 	EchoInput bool
 
+	// Tags prefixes tags indicating type of output ("input",
+	// "emit", "diag").
+	Tags bool
+
 	// PadTags adds some padding to tags ("input", "emit",
 	// "update") used in output.
 	PadTags bool
 
+	// PrintUpdates will print update messages to stdout.
+	PrintUpdates bool
+
 	JSONStore
+
+	// InputEOF will be closed on EOF from stdin.
+	InputEOF chan bool
 
 	// WriteStatePerMsg will write out ALL state after every input
 	// message is processed.
 	//
 	// Inefficient!
 	WriteStatePerMsg bool
-
-	// InputEOF will be closed on EOF from stdin.
-	InputEOF chan bool
 
 	// PrintDiag turns on printing of diagnostic data.
 	PrintDiag bool
@@ -119,8 +126,9 @@ func (s *Stdio) Read(ctx context.Context) (map[string]*crew.Machine, error) {
 }
 
 // IO returns channels for reading from stdin and writing to stdout.
-func (s *Stdio) IO(ctx context.Context) (chan interface{}, chan *Result, error) {
+func (s *Stdio) IO(ctx context.Context) (chan interface{}, chan *Result, chan bool, error) {
 	in := make(chan interface{})
+	done := make(chan bool)
 
 	if s.StateOutputFilename != "" {
 		s.state = make(map[string]*crew.Machine)
@@ -130,7 +138,9 @@ func (s *Stdio) IO(ctx context.Context) (chan interface{}, chan *Result, error) 
 		if s.PadTags {
 			tag = fmt.Sprintf("% 10s", tag)
 		}
-		format = tag + " " + format
+		if s.Tags {
+			format = tag + " " + format
+		}
 		if s.Timestamps {
 			ts := fmt.Sprintf("%-31s", time.Now().UTC().Format(time.RFC3339Nano))
 			format = ts + " " + format
@@ -150,6 +160,7 @@ func (s *Stdio) IO(ctx context.Context) (chan interface{}, chan *Result, error) 
 			default:
 				line, err := stdin.ReadString('\n')
 				if err == io.EOF || strings.TrimSpace(line) == "quit" {
+					close(done)
 					close(s.InputEOF)
 					return
 				}
@@ -176,9 +187,14 @@ func (s *Stdio) IO(ctx context.Context) (chan interface{}, chan *Result, error) 
 					fmt.Fprintf(os.Stderr, "bad input: %s\n", err)
 					continue
 				}
-				in <- msg
+
+				select {
+				case <-ctx.Done():
+				case in <- msg:
+				}
 			}
 		}
+		log.Printf("stdio input done")
 	}()
 
 	out := make(chan *Result)
@@ -194,20 +210,22 @@ func (s *Stdio) IO(ctx context.Context) (chan interface{}, chan *Result, error) 
 				if r == nil {
 					return
 				}
-				for i, emitted := range r.Emitted {
-					for j, msg := range emitted {
-						printf("emit", "%d,%d %s\n", i, j, JS(msg))
+				for _, emitted := range r.Emitted {
+					for _, msg := range emitted {
+						printf("emit", "%s\n", JS(msg))
 					}
 				}
 				if s.PrintDiag {
 					if r.Diag != nil {
-						for i, stroll := range r.Diag {
-							printf("diag", "%d,%s\n", i, JShort(stroll))
+						for _, stroll := range r.Diag {
+							printf("diag", "%s\n", JShort(stroll))
 						}
 					}
 				}
 				for mid, m := range r.Changed {
-					printf("update", "%s %s\n", mid, JShort(m))
+					if s.PrintUpdates {
+						printf("update", "%s %s\n", mid, JShort(m))
+					}
 					if s.state != nil {
 						if m.Deleted {
 							delete(s.state, mid)
@@ -234,10 +252,11 @@ func (s *Stdio) IO(ctx context.Context) (chan interface{}, chan *Result, error) 
 				}
 			}
 		}
+		log.Printf("stdio output done")
 
 	}()
 
-	return in, out, nil
+	return in, out, done, nil
 }
 
 // writeState writes the entire crew as JSON.

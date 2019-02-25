@@ -220,6 +220,7 @@ type Couplings struct {
 	c        *sio.Crew
 	incoming chan interface{}
 	outbound chan *sio.Result
+	done     chan bool
 }
 
 // inHandler is a Paho publish handler, which is used to handle
@@ -288,8 +289,8 @@ func (c *Couplings) Start(ctx context.Context) error {
 
 // IO starts a loop to publish out-bound Results and forward incoming
 // messages.
-func (c *Couplings) IO(ctx context.Context) (chan interface{}, chan *sio.Result, error) {
-	return c.incoming, c.outbound, nil
+func (c *Couplings) IO(ctx context.Context) (chan interface{}, chan *sio.Result, chan bool, error) {
+	return c.incoming, c.outbound, c.done, nil
 }
 
 // outLoop forwards messages outbound from the Crew to the MQTT
@@ -353,6 +354,7 @@ func (c *Couplings) Read(context.Context) (map[string]*crew.Machine, error) {
 func (c *Couplings) Stop(context.Context) error {
 	log.Printf("Disconnecting")
 	c.Client.Disconnect(c.Quiesce)
+	close(c.done)
 	return nil
 }
 

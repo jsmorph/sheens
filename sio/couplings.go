@@ -34,7 +34,7 @@ type Couplings interface {
 	//
 	// Consumer can see all emitted messages and state updates via
 	// the Result(s).
-	IO(context.Context) (chan interface{}, chan *Result, error)
+	IO(context.Context) (chan interface{}, chan *Result, chan bool, error)
 
 	// Read (optionally) returns an initial set of machines.
 	//

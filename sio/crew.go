@@ -29,7 +29,7 @@ import (
 	"github.com/jsmorph/sheens/interpreters/ecmascript"
 	"github.com/jsmorph/sheens/match"
 
-	yaml "gopkg.in/yaml.v2"
+	"github.com/jsccast/yaml"
 )
 
 var (
@@ -121,6 +121,9 @@ type Crew struct {
 	// out receives all out-bound messages.
 	out chan *Result
 
+	// done is closed by Couplings when its input is closed.
+	done chan bool
+
 	// Mutex can probably be removed once code is cleaned up to
 	// perform all state changes, including timers state changes,
 	// the Crew loop.  ToDo.
@@ -132,7 +135,7 @@ type Crew struct {
 // The coupling's IO() method is called to obtain the crew's in/out
 // channels.
 func NewCrew(ctx context.Context, conf *CrewConf, couplings Couplings) (*Crew, error) {
-	in, out, err := couplings.IO(ctx)
+	in, out, done, err := couplings.IO(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -140,6 +143,7 @@ func NewCrew(ctx context.Context, conf *CrewConf, couplings Couplings) (*Crew, e
 		Conf: conf,
 		in:   in,
 		out:  out,
+		done: done,
 	}
 
 	return c, c.init(ctx)
@@ -152,7 +156,10 @@ func (c *Crew) init(ctx context.Context) error {
 	c.previous = make(map[string]string, 8)
 
 	f := func(ctx context.Context, te *TimerEntry) {
-		c.in <- te.Msg
+		select {
+		case <-ctx.Done():
+		case c.in <- te.Msg:
+		}
 	}
 	c.timers = NewTimers(f)
 	c.timers.c = c
@@ -314,6 +321,9 @@ func (c *Crew) ProcessMsg(ctx context.Context, msg interface{}) (*Result, error)
 		}
 
 		for _, walked := range walkeds {
+			if walked.Error != nil {
+				c.Errorf("ProcessMsg %s", walked.Error)
+			}
 			emitted := make([]interface{}, 0, 8)
 			walked.DoEmitted(func(msg interface{}) error {
 				if m, is := msg.(map[string]interface{}); is {
@@ -410,18 +420,25 @@ func (c *Crew) Loop(ctx context.Context) error {
 LOOP:
 	for {
 		select {
+		case <-c.done:
+			break LOOP
+		case <-ctx.Done():
+			c.Logf("Crew.Loop shutting down")
+			break LOOP
 		case msg := <-c.in:
+			if msg == nil {
+				break LOOP
+			}
 			r, err := c.ProcessMsg(ctx, msg)
 			if err != nil {
 				c.Errorf("Crew.Loop ProcessMsg %s", err)
 				// ToDo: Consider reprocessing msg?
 				continue
 			}
-			c.out <- r
-
-		case <-ctx.Done():
-			c.Logf("Crew.Loop shutting down")
-			break LOOP
+			select {
+			case <-ctx.Done():
+			case c.out <- r:
+			}
 		}
 	}
 
@@ -546,10 +563,8 @@ func (c *Crew) RunMachine(ctx context.Context, msg interface{}, m *crew.Machine)
 	return walked, err
 }
 
-// ResolveSpecSource attempts to find and compile a spec based o a
+// ResolveSpecSource attempts to find and compile a spec based on a
 // crew.SpecSource (or something that looks like one).
-//
-// Only SpecSource.Inline has been used recently.
 //
 // ToDo: Test and document.
 func ResolveSpecSource(ctx context.Context, specSource interface{}) (*crew.SpecSource, *core.Spec, error) {
@@ -576,7 +591,6 @@ func ResolveSpecSource(ctx context.Context, specSource interface{}) (*crew.SpecS
 
 		if strings.HasPrefix(src.URL, "file://") {
 			filename := src.URL[7:]
-			log.Println("ResolveSpecSource: reading file", filename)
 			body, err = ioutil.ReadFile(filename)
 		} else {
 			resp, err := http.Get(src.URL)

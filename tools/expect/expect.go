@@ -37,6 +37,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/jsmorph/sheens/core"
@@ -144,6 +145,8 @@ type Session struct {
 //
 func (s *Session) Run(ctx context.Context, dir string, args ...string) error {
 
+	ctx, cancel := context.WithCancel(ctx)
+
 	if dir != "" {
 		cwd, err := os.Getwd()
 		if err != nil {
@@ -196,7 +199,9 @@ func (s *Session) Run(ctx context.Context, dir string, args ...string) error {
 				break
 			}
 			if err != nil {
-				log.Printf("stderr error %s", err)
+				if strings.Index(err.Error(), "already closed") < 0 {
+					log.Printf("stderr error %s", err)
+				}
 				break
 			}
 			if s.ShowStderr {
@@ -212,8 +217,7 @@ func (s *Session) Run(ctx context.Context, dir string, args ...string) error {
 		}
 
 		var (
-			timer *time.Timer
-			errs  = make(chan error, 3) // At least three
+			errs = make(chan error, 4)
 
 			happy    = errors.New("happy")
 			timeout  = errors.New("timeout")
@@ -221,12 +225,13 @@ func (s *Session) Run(ctx context.Context, dir string, args ...string) error {
 		)
 
 		if 0 < iop.Timeout {
-			timer = time.AfterFunc(iop.Timeout, func() {
+			time.AfterFunc(iop.Timeout, func() {
+				errs <- timeout
 				errs <- timeout
 			})
 		}
 
-		// Process stdout.
+		// Consume stdout.
 		go func() {
 			f := func() error {
 
@@ -237,7 +242,7 @@ func (s *Session) Run(ctx context.Context, dir string, args ...string) error {
 					}
 				}
 
-				for {
+				for 0 < need {
 					line, err := out.ReadBytes('\n')
 					if err != nil {
 						return err
@@ -300,18 +305,13 @@ func (s *Session) Run(ctx context.Context, dir string, args ...string) error {
 								need--
 							}
 						}
-						if need == 0 {
-							return nil
-						}
 					}
 				}
+
+				return nil
 			}
 
-			err := f()
-			if timer != nil {
-				timer.Stop()
-			}
-			if err == nil {
+			if err := f(); err == nil {
 				errs <- happy
 			} else {
 				errs <- err
@@ -352,15 +352,15 @@ func (s *Session) Run(ctx context.Context, dir string, args ...string) error {
 			} else {
 				errs <- err
 			}
-
 		}()
+
+		// Wait until we are done.
 
 		happies := 0
 		want := 2
 
 	LOOP:
-		for {
-
+		for happies < want {
 			select {
 			case <-ctx.Done():
 				return canceled
@@ -368,9 +368,6 @@ func (s *Session) Run(ctx context.Context, dir string, args ...string) error {
 				switch err {
 				case happy:
 					happies++
-					if want <= happies {
-						break LOOP
-					}
 				default:
 					break LOOP
 				}
@@ -382,8 +379,14 @@ func (s *Session) Run(ctx context.Context, dir string, args ...string) error {
 		}
 	}
 
+	cancel()
+
 	if err := stdin.Close(); err != nil {
 		log.Printf("stdin.Close() error %s", err)
+	}
+
+	if err := stdout.Close(); err != nil {
+		log.Printf("stdout.Close() error %s", err)
 	}
 
 	if err := cmd.Wait(); err != nil {

@@ -36,6 +36,7 @@ func main() {
 	flag.BoolVar(&io.Timestamps, "ts", false, "print timestamps")
 	flag.BoolVar(&io.ShellExpand, "sh", false, "shell-expand input")
 	flag.BoolVar(&io.PadTags, "pad", false, "pad tags")
+	flag.BoolVar(&io.Tags, "tags", true, "tags")
 	flag.StringVar(&io.StateOutputFilename, "state-out", "", "state output filename")
 	flag.BoolVar(&io.WriteStatePerMsg, "write-state-msg", false, "write state after each msg")
 	flag.BoolVar(&io.PrintDiag, "diag", false, "print diagnostic data")
@@ -45,6 +46,7 @@ func main() {
 		mid      = flag.String("mid", "m", "Machine id for -spec-file (if given)")
 		stateJS  = flag.String("state", "{}", "State for -spec-file (if given)")
 		wait     = flag.Duration("wait", 0, "wait this long before shutting down couplings")
+		verbose  = flag.Bool("v", false, "verbose")
 
 		specSource *crew.SpecSource
 		state      *core.State
@@ -83,6 +85,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	c.Verbose = *verbose
 
 	if err = io.Start(ctx); err != nil {
 		panic(err)
@@ -94,8 +97,6 @@ func main() {
 	}
 
 	if specSource != nil {
-		log.Printf("SetMachine %s", *mid)
-
 		if err := c.SetMachine(ctx, *mid, specSource, state); err != nil {
 			panic(err)
 		}
@@ -116,6 +117,7 @@ func main() {
 	if err := c.Loop(ctx); err != nil {
 		panic(err)
 	}
+	log.Printf("debug Loop done")
 
 	if err = io.Stop(context.Background()); err != nil {
 		panic(err)
