@@ -21,7 +21,6 @@ import (
 	"encoding/json"
 	"flag"
 	"io/ioutil"
-	"log"
 	"time"
 
 	"github.com/jsmorph/sheens/core"
@@ -45,7 +44,7 @@ func main() {
 		specFile = flag.String("spec-file", "", "optional spec filename")
 		mid      = flag.String("mid", "m", "Machine id for -spec-file (if given)")
 		stateJS  = flag.String("state", "{}", "State for -spec-file (if given)")
-		wait     = flag.Duration("wait", 0, "wait this long before shutting down couplings")
+		wait     = flag.Duration("wait", time.Second, "wait this long before shutting down couplings")
 		verbose  = flag.Bool("v", false, "verbose")
 
 		specSource *crew.SpecSource
@@ -117,7 +116,6 @@ func main() {
 	if err := c.Loop(ctx); err != nil {
 		panic(err)
 	}
-	log.Printf("debug Loop done")
 
 	if err = io.Stop(context.Background()); err != nil {
 		panic(err)

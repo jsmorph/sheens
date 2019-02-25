@@ -75,13 +75,13 @@ Change to the root of the repo or the `sheens-VERSION` subdirectory of
 the release.  Then try this example:
 
 ```Shell
-echo '{"double":1}' | msimple -s specs/double.yaml 
+echo '{"double":1}' | siostd -spec-file specs/double.yaml 
 ```
 
 You should see `{"doubled":2}`.  After that, try
 
 ```Shell
-echo '{"collatz":23}' | msimple -s specs/collatz.yaml 
+echo '{"collatz":23}' | siostd -spec-file specs/collatz.yaml
 ```
 
 ## Design
