@@ -1,0 +1,7 @@
+*~
+*.so
+*.a
+*.o
+demo
+double.js
+duktape-*

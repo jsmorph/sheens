@@ -1,35 +1,37 @@
-// A Javascript (!) program that demonstrates a little use of the
-// Process() API, which the the core machine API.
+// A quick example of running a machine.  The variable 'spec' should
+// contain the machine's specification.  The Makefile will generate
+// 'double.js', which defines 'spec.
+//
+// Usage: ./demo double.js demo.js
 
-var initialState = {
+// The machine's initial state.
+var m = {
     bs: {count: 0},
-    node: "start",
-    spec: "double"
+    node: "start"
 };
 
-var messages = [{double:1}, {double:10}, {double:100}];
+// The messages that we'll process.
+var msgs = [{double:1}, {double:10}, {double:100}];
 
-var state = initialState;
+var ctx = null;
 
-for (var i = 0; i < messages.length; i++) {
-    var message = messages[i];
+// Process each message, and update the machine's state as we go.
+for (var i = 0; i < msgs.length; i++) {
+    var msg = msgs[i];
+    
+    print("state", i, JSON.stringify(m));
+    print("stepping", i, JSON.stringify(msg));
+    
+    var stepped = walk(ctx, spec, m, msg);
+    print("stepped", i, JSON.stringify(stepped));
 
-    var state_js = JSON.stringify(state);
-    var message_js = JSON.stringify(message);
-    print("Process", i, state_js, message_js);
+    var emitted = stepped.emitted;
+    for (var j = 0; j < emitted.length; j++) {
+	print(i, j, "emitted", JSON.stringify(emitted[j]));
+    }
 
-    // This Process() call is the same as its C API equivalent.
-    var result_js = Process(state_js, message_js);
-    print("Process returned", result_js);
-    var result = JSON.parse(result_js);
-
-    // Let's just use that state.
-    // (We might want to write it out first.)
-    state.bs = result.to.bs;
-    state.node = result.to.node;
-    // state.spec hasn't changed.
-    print("state", i, JSON.stringify(state));
-
-    // We should probably now Process each "emitted" message
-    // (recursively with a limit).
+    m.bs = stepped.to.bs;
+    m.node = stepped.to.node;
 }
+
+true;
