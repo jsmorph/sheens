@@ -110,6 +110,14 @@ static duk_ret_t sandbox(duk_context *ctx) {
   return 1; /* If non-zero, caller will see 'undefined'. */
 }
 
+static duk_ret_t readfile(duk_context *ctx) {
+  const char *filename = duk_to_string(ctx, 0);
+  char *buf = readFile(filename);
+  duk_push_string(ctx, buf);
+
+  return 1; /* If non-zero, caller will see 'undefined'. */
+}
+
 int main(int argc, char *argv[]) {
 
 	const char *res;
@@ -126,6 +134,9 @@ int main(int argc, char *argv[]) {
 
 	duk_push_c_function(ctx->dctx, sandbox, 1);
 	duk_put_global_string(ctx->dctx, "sandbox");
+
+	duk_push_c_function(ctx->dctx, readfile, 1);
+	duk_put_global_string(ctx->dctx, "readfile");
 
 	{
 	  char *src = sheens_js();
